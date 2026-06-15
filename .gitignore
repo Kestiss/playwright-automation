@@ -10,3 +10,4 @@ packages/**/playwright/.auth/
 packages/**/test-results/
 
 .idea/
+packages/ebay/.tmp/
