@@ -43,7 +43,8 @@ function formatEntries(title: string, entries: DiagnosticEntry[]): string[] {
 }
 
 function getHtmlReportUrl(testInfo: TestInfo): string | undefined {
-  const packageName = testInfo.config.metadata?.packageName;
+  const metadata = testInfo.config.metadata as { packageName?: unknown } | undefined;
+  const packageName = metadata?.packageName;
 
   if (typeof packageName !== 'string' || packageName.length === 0) {
     return undefined;

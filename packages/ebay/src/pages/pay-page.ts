@@ -3,7 +3,7 @@ import { seconds } from '@playwright-automation/core';
 
 import { CurrencySelectionPopup } from '../components/currency-selection-popup.js';
 import { typeIntoField } from '../utils/type-into-field.js';
-import { CartPage, CART_URL_PREFIX } from './cart-page.js';
+import { CartPage } from './cart-page.js';
 
 export const GUEST_CHECKOUT_URL_PREFIX = 'https://pay.ebay.com/';
 

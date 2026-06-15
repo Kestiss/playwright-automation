@@ -57,7 +57,7 @@ function mergeDefined<T extends object>(base: T, overrides?: Partial<T>): T {
     return base;
   }
 
-  const merged = { ...base } as T;
+  const merged = { ...base };
 
   for (const [key, value] of Object.entries(overrides) as [
     keyof T,
