@@ -34,6 +34,7 @@ Playwright + TypeScript workspace for multiple, test modules while reusing share
 - eBay has anti-bot and challenge pages; the project tries to include challenge handling, but it is not always stable, longer waits added to solve challenges manually.
 - The checkout flow proceeds as far as possible without completing payment and expects the payment attempt to fail.
 - After payment is failed, test goes straight to cart page via url, because there is no UI element to go back to cart. Alternatively, we could use browser's back functionality.
+- GitHub workflow will fail as tests will not be passing due to eBay bot detection.
 
 ## Extension rules
 
