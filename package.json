@@ -1,0 +1,29 @@
+{
+  "name": "playwright-automation",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "test": "pnpm run test:web && pnpm run test:api",
+    "test:web": "pnpm --filter @playwright-automation/ebay exec playwright test --workers=1",
+    "test:api": "pnpm --filter @playwright-automation/petstore exec playwright test",
+    "test:web:ui": "pnpm --filter @playwright-automation/ebay exec playwright test --ui",
+    "playwright:install": "pnpm --filter @playwright-automation/ebay exec playwright install --with-deps",
+    "test:web:headed": "pnpm --filter @playwright-automation/ebay exec playwright test --workers=1",
+    "test:web:headless": "HEADLESS=true pnpm --filter @playwright-automation/ebay exec playwright test --workers=1"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}

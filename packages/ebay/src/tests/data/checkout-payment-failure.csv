@@ -1,0 +1,4 @@
+keyword,brand,minimumPrice,maximumPrice,email,country,firstName,lastName,addressLine1,addressLine2,city,stateOrProvince,postalCode,phoneNumber,cardNumber,expirationDate,securityCode,cardFirstName,cardLastName
+Headphones,Sony,50,200,petras.petrauskas@gmail.com,Lithuania,Petras,Petrauskas,Gedimino pr. 12,,Vilnius,,01100,61234567,4111111111111111,12/30,123,Petras,Petrauskas
+Headphones,Sony,60,180,ieva.kazlauskiene@gmail.com,Lithuania,Ieva,Kazlauskiene,Konstitucijos pr. 18,,Vilnius,,09308,62345678,4111111111111111,11/31,234,Ieva,Kazlauskiene
+Headphones,Sony,75,220,mantas.jankauskas@gmail.com,Lithuania,Mantas,Jankauskas,Savanoriu pr. 45,,Kaunas,,44240,63456789,4111111111111111,10/32,345,Mantas,Jankauskas
