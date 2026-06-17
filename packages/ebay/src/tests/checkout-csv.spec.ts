@@ -8,7 +8,7 @@ import {
 import { openHomePage } from '../shortcuts/shopping-actions.js';
 
 const checkoutRows = loadCheckoutDataRowsFromCsv(
-  new URL('./data/checkout-payment-failure.csv', import.meta.url),
+  new URL('./data/scenarios.csv', import.meta.url),
 );
 
 test.describe('eBay checkout flow', () => {
