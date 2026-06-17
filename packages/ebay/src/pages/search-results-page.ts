@@ -136,6 +136,7 @@ export class SearchResultsPage {
   }
 
   async openNthResult(position: number): Promise<ProductPage> {
+    const expectedTitle = await this.getNthResultTitle(position);
     const resultCard = this.getNthResultCard(position);
     const resultLink = this.resultLinkLocator(position);
 
@@ -152,7 +153,10 @@ export class SearchResultsPage {
     await productPage.waitForLoadState('domcontentloaded');
     setDiagnosticActivePage(this.page, productPage);
 
-    return new ProductPage(productPage);
+    const product = new ProductPage(productPage);
+    await product.expectTitle(expectedTitle);
+
+    return product;
   }
 
   private getNthResultCard(position: number): Locator {

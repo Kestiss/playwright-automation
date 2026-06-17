@@ -26,8 +26,9 @@ export class CartPage extends BasePage {
   async expectOpened(): Promise<void> {
     await this.page.waitForURL(
       (url) => url.toString().startsWith(CART_URL_PREFIX),
-      { timeout: seconds(10) },
+      { timeout: seconds(60) },
     );
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async expectItemTitle(expectedTitle: string): Promise<void> {

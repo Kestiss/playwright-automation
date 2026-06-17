@@ -1,33 +1,28 @@
 import { test } from '@playwright-automation/core';
 
-import { EbayShoppingFlow } from '../flows/ebay-shopping-flow.js';
 import { createCheckoutTestData } from '../utils/checkout-test-data.js';
+import { openHomePage } from '../shortcuts/shopping-actions.js';
 
 test.describe('eBay checkout flow', () => {
   test(
     'user begins guest checkout and fails to make payment',
     { tag: '@checkout' },
     async ({ page }) => {
-      const ebayShoppingFlow = new EbayShoppingFlow(page);
       const checkoutData = createCheckoutTestData();
-
-      await ebayShoppingFlow.openHomePage();
-      await ebayShoppingFlow.searchForProduct('Headphones');
-      await ebayShoppingFlow.filterByBrand('Sony');
-      await ebayShoppingFlow.filterByPriceRange({
-        minimumPrice: '50',
-        maximumPrice: '200',
-      });
-      await ebayShoppingFlow.openResult(3);
-      await ebayShoppingFlow.addItemToCart();
-      await ebayShoppingFlow.openCart();
-      await ebayShoppingFlow.beginCheckout();
-      await ebayShoppingFlow.continueCheckoutAsGuest();
-      await ebayShoppingFlow.fillGuestCheckoutAddress(checkoutData.address);
-      await ebayShoppingFlow.submitGuestCheckoutAddress();
-      await ebayShoppingFlow.fillNewCardDetails(checkoutData.card);
-      await ebayShoppingFlow.submitNewCardDetails();
-      await ebayShoppingFlow.confirmPaymentAndExpectFailure();
+      const homePage = await openHomePage(page);
+      const searchResultsPage = await homePage.searchFor('Headphones');
+      await searchResultsPage.selectBrand('Sony');
+      await searchResultsPage.setPriceRange({ minimumPrice: '50', maximumPrice: '200' });
+      const productPage = await searchResultsPage.openNthResult(3);
+      const popup = await productPage.addToCart();
+      const cartPage = await popup.openCart();
+      const checkoutAuthPanel = await cartPage.beginCheckout();
+      const payPage = await checkoutAuthPanel.continueAsGuest();
+      await payPage.fillGuestAddress(checkoutData.address);
+      await payPage.submitGuestAddress();
+      await payPage.fillNewCardDetails(checkoutData.card);
+      await payPage.submitNewCardDetails();
+      await payPage.confirmAndExpectPaymentFailure();
     },
   );
 
@@ -35,28 +30,24 @@ test.describe('eBay checkout flow', () => {
     'user returns to cart and removes the item after the checkout attempt',
     { tag: '@checkout' },
     async ({ page }) => {
-      const ebayShoppingFlow = new EbayShoppingFlow(page);
       const checkoutData = createCheckoutTestData();
-
-      await ebayShoppingFlow.openHomePage();
-      await ebayShoppingFlow.searchForProduct('Headphones');
-      await ebayShoppingFlow.filterByBrand('Sony');
-      await ebayShoppingFlow.filterByPriceRange({
-        minimumPrice: '50',
-        maximumPrice: '200',
-      });
-      await ebayShoppingFlow.openResult(3);
-      await ebayShoppingFlow.addItemToCart();
-      await ebayShoppingFlow.openCart();
-      await ebayShoppingFlow.beginCheckout();
-      await ebayShoppingFlow.continueCheckoutAsGuest();
-      await ebayShoppingFlow.fillGuestCheckoutAddress(checkoutData.address);
-      await ebayShoppingFlow.submitGuestCheckoutAddress();
-      await ebayShoppingFlow.fillNewCardDetails(checkoutData.card);
-      await ebayShoppingFlow.submitNewCardDetails();
-      await ebayShoppingFlow.confirmPaymentAndExpectFailure();
-      await ebayShoppingFlow.returnToCart();
-      await ebayShoppingFlow.removeItemFromCart();
+      const homePage = await openHomePage(page);
+      const searchResultsPage = await homePage.searchFor('Headphones');
+      await searchResultsPage.selectBrand('Sony');
+      await searchResultsPage.setPriceRange({ minimumPrice: '50', maximumPrice: '200' });
+      const productPage = await searchResultsPage.openNthResult(3);
+      const popup = await productPage.addToCart();
+      const cartPage = await popup.openCart();
+      const checkoutAuthPanel = await cartPage.beginCheckout();
+      const payPage = await checkoutAuthPanel.continueAsGuest();
+      await payPage.fillGuestAddress(checkoutData.address);
+      await payPage.submitGuestAddress();
+      await payPage.fillNewCardDetails(checkoutData.card);
+      await payPage.submitNewCardDetails();
+      await payPage.confirmAndExpectPaymentFailure();
+      const returnedCartPage = await payPage.returnToCart();
+      await returnedCartPage.removeItem();
+      await returnedCartPage.expectItemRemoved();
     },
   );
 });

@@ -1,11 +1,11 @@
 import type { Page } from '@playwright/test';
 import { test } from '@playwright-automation/core';
 
-import { EbayShoppingFlow } from '../flows/ebay-shopping-flow.js';
 import {
   loadCheckoutDataRowsFromCsv,
   type CheckoutCsvData,
 } from '../utils/checkout-csv-data.js';
+import { openHomePage } from '../shortcuts/shopping-actions.js';
 
 const checkoutRows = loadCheckoutDataRowsFromCsv(
   new URL('./data/checkout-payment-failure.csv', import.meta.url),
@@ -27,27 +27,26 @@ async function runCheckoutPaymentFailureScenario(
   page: Page,
   checkoutData: CheckoutCsvData,
 ): Promise<void> {
-  const ebayShoppingFlow = new EbayShoppingFlow(page);
-
-  await ebayShoppingFlow.openHomePage();
-  await ebayShoppingFlow.searchForProduct(checkoutData.search.keyword);
+  const homePage = await openHomePage(page);
+  const searchResultsPage = await homePage.searchFor(checkoutData.search.keyword);
 
   if (checkoutData.search.brand) {
-    await ebayShoppingFlow.filterByBrand(checkoutData.search.brand);
+    await searchResultsPage.selectBrand(checkoutData.search.brand);
   }
 
-  await ebayShoppingFlow.filterByPriceRange({
+  await searchResultsPage.setPriceRange({
     minimumPrice: checkoutData.search.minimumPrice,
     maximumPrice: checkoutData.search.maximumPrice,
   });
-  await ebayShoppingFlow.openResult(3);
-  await ebayShoppingFlow.addItemToCart();
-  await ebayShoppingFlow.openCart();
-  await ebayShoppingFlow.beginCheckout();
-  await ebayShoppingFlow.continueCheckoutAsGuest();
-  await ebayShoppingFlow.fillGuestCheckoutAddress(checkoutData.address);
-  await ebayShoppingFlow.submitGuestCheckoutAddress();
-  await ebayShoppingFlow.fillNewCardDetails(checkoutData.card);
-  await ebayShoppingFlow.submitNewCardDetails();
-  await ebayShoppingFlow.confirmPaymentAndExpectFailure();
+
+  const productPage = await searchResultsPage.openNthResult(3);
+  const popup = await productPage.addToCart();
+  const cartPage = await popup.openCart();
+  const checkoutAuthPanel = await cartPage.beginCheckout();
+  const payPage = await checkoutAuthPanel.continueAsGuest();
+  await payPage.fillGuestAddress(checkoutData.address);
+  await payPage.submitGuestAddress();
+  await payPage.fillNewCardDetails(checkoutData.card);
+  await payPage.submitNewCardDetails();
+  await payPage.confirmAndExpectPaymentFailure();
 }

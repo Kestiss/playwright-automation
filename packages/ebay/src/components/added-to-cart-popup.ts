@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { resolveChallengeOrSkip } from '../guards/challenge-guard.js';
 import { CartPage } from '../pages/cart-page.js';
 
 export class AddedToCartPopup {
@@ -30,12 +31,16 @@ export class AddedToCartPopup {
   }
 
   async openCart(): Promise<CartPage> {
+    const expectedTitle = await this.itemTitle.innerText();
     const cartPage = new CartPage(this.page);
 
     await Promise.all([
       cartPage.expectOpened(),
       this.seeInCartLink.click({ noWaitAfter: true }),
     ]);
+
+    await resolveChallengeOrSkip(this.page);
+    await cartPage.expectItemTitle(expectedTitle);
 
     return cartPage;
   }

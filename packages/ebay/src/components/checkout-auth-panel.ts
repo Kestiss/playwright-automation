@@ -5,6 +5,7 @@ import {
   type Page,
 } from '@playwright/test';
 
+import { resolveChallengeOrSkip } from '../guards/challenge-guard.js';
 import { PayPage } from '../pages/pay-page.js';
 
 export class CheckoutAuthPanel {
@@ -47,6 +48,7 @@ export class CheckoutAuthPanel {
       payPage.expectOpened(),
       this.guestCheckoutButton.click({ noWaitAfter: true }),
     ]);
+    await resolveChallengeOrSkip(this.page);
 
     return payPage;
   }

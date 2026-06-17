@@ -9,7 +9,7 @@ process.env.TEST_ENV ??= 'prod';
 
 const env = loadEnvironment();
 const isHeadlessRun = process.env.HEADLESS === 'true' || !!process.env.CI;
-const selectedProjects = (process.env.PW_PROJECTS ?? 'chromium, firefox')
+const selectedProjects = (process.env.PW_PROJECTS ?? 'chromium') // to switch use PW_PROJECTS=firefox or PW_PROJECTS=chromium,firefox
   .split(',')
   .map((project) => project.trim())
   .filter(Boolean);

@@ -41,8 +41,8 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
-      - name: Run web tests
-        run: pnpm run test:web --workers=6
-
       - name: Run api tests
         run: pnpm run test:api
+
+      - name: Run web tests
+        run: pnpm run test:web --workers=6

@@ -2,26 +2,18 @@ import { test } from '@playwright-automation/core';
 
 import {
   DEFAULT_SEARCH_PRODUCT,
-  EbayShoppingFlow,
-} from '../flows/ebay-shopping-flow.js';
-
-async function openDefaultSearchResults(
-  ebayShoppingFlow: EbayShoppingFlow,
-): Promise<void> {
-  await ebayShoppingFlow.openHomePage();
-  await ebayShoppingFlow.searchForProduct(DEFAULT_SEARCH_PRODUCT);
-}
+  openDefaultSearchResults,
+} from '../shortcuts/shopping-actions.js';
 
 test.describe('eBay price filters', () => {
   test(
     'applies only the minimum price filter',
     { tag: '@filters' },
     async ({ page }) => {
-      const ebayShoppingFlow = new EbayShoppingFlow(page);
+      const searchResultsPage = await openDefaultSearchResults(page);
 
-      await openDefaultSearchResults(ebayShoppingFlow);
-      await ebayShoppingFlow.filterByPriceRange({ minimumPrice: '50' });
-      await ebayShoppingFlow.expectPriceRangeApplied({
+      await searchResultsPage.setPriceRange({ minimumPrice: '50' });
+      await searchResultsPage.expectPriceRangeApplied({
         keyword: DEFAULT_SEARCH_PRODUCT,
         minimumPrice: '50',
       });
@@ -32,11 +24,10 @@ test.describe('eBay price filters', () => {
     'applies only the maximum price filter',
     { tag: '@filters' },
     async ({ page }) => {
-      const ebayShoppingFlow = new EbayShoppingFlow(page);
+      const searchResultsPage = await openDefaultSearchResults(page);
 
-      await openDefaultSearchResults(ebayShoppingFlow);
-      await ebayShoppingFlow.filterByPriceRange({ maximumPrice: '200' });
-      await ebayShoppingFlow.expectPriceRangeApplied({
+      await searchResultsPage.setPriceRange({ maximumPrice: '200' });
+      await searchResultsPage.expectPriceRangeApplied({
         keyword: DEFAULT_SEARCH_PRODUCT,
         maximumPrice: '200',
       });
@@ -47,14 +38,13 @@ test.describe('eBay price filters', () => {
     'applies minimum and maximum price filters',
     { tag: '@filters' },
     async ({ page }) => {
-      const ebayShoppingFlow = new EbayShoppingFlow(page);
+      const searchResultsPage = await openDefaultSearchResults(page);
 
-      await openDefaultSearchResults(ebayShoppingFlow);
-      await ebayShoppingFlow.filterByPriceRange({
+      await searchResultsPage.setPriceRange({
         minimumPrice: '50',
         maximumPrice: '200',
       });
-      await ebayShoppingFlow.expectPriceRangeApplied({
+      await searchResultsPage.expectPriceRangeApplied({
         keyword: DEFAULT_SEARCH_PRODUCT,
         minimumPrice: '50',
         maximumPrice: '200',

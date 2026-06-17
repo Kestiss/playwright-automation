@@ -10,7 +10,7 @@ export class ProductPage {
     this.addToCartButton = page.getByRole('button', { name: 'Add to cart' });
     this.productTitle = page.locator(
       "h1[class='x-item-title__mainTitle'] span",
-    );
+    ).first();
   }
 
   async expectTitle(expectedTitle: string): Promise<void> {
@@ -18,10 +18,13 @@ export class ProductPage {
   }
 
   async addToCart(): Promise<AddedToCartPopup> {
+    const expectedTitle = await this.productTitle.innerText();
+
     await this.addToCartButton.click();
 
     const addedToCartPopup = new AddedToCartPopup(this.page);
     await addedToCartPopup.expectOpened();
+    await addedToCartPopup.expectItemTitle(expectedTitle);
 
     return addedToCartPopup;
   }

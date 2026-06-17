@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { seconds } from '@playwright-automation/core';
 
 import { CookieBanner } from '../components/cookie-banner.js';
+import { resolveChallengeOrSkip } from '../guards/challenge-guard.js';
 import { BasePage } from './base-page.js';
 import { SearchResultsPage } from './search-results-page.js';
 
@@ -30,6 +31,7 @@ export class HomePage extends BasePage {
     await this.searchInput.fill(searchTerm);
     await this.searchButton.click();
     await this.page.waitForLoadState('domcontentloaded');
+    await resolveChallengeOrSkip(this.page);
 
     return new SearchResultsPage(this.page);
   }
